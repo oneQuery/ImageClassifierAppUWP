@@ -11,9 +11,9 @@ public class ClassifierInput
 
 public class ClassifierOutput
 {
-    public IReadOnlyDictionary<string, float> Predictions { get; set; }
+    public TensorFloat Predictions { get; set; }
 
-    public ClassifierOutput(IReadOnlyDictionary<string, float> outputPredictions)
+    public ClassifierOutput(TensorFloat outputPredictions)
     {
         Predictions = outputPredictions;
     }
@@ -37,7 +37,13 @@ public sealed class ClassifierModel
         LearningModelBinding binding = new LearningModelBinding(_session);
         binding.Bind("inputs", input.Data);
         LearningModelEvaluationResult result = await _session.EvaluateAsync(binding, string.Empty);
-        var outputPredictions = result.Outputs["predictions"] as IReadOnlyDictionary<string, float>;
+        var outputPredictions = result.Outputs["predictions"] as TensorFloat;
         return new ClassifierOutput(outputPredictions);
     }
+    
+    //foreach (var inputFeature in model._model.InputFeatures)
+    //{
+    //    System.Diagnostics.Debug.WriteLine($"Name: {inputFeature.Name}, Type: {inputFeature.Kind}, Shape: {inputFeature.Shape}");
+    //}
+
 }
